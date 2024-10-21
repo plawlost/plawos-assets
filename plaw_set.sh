@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PlawOS Setup Script (plaw_set.sh)
-# Version: 1.3
+# Version: 1.4
 # Description: Transforms Kubuntu into PlawOS with custom branding
 
 # Set strict mode
@@ -9,7 +9,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Define constants
-readonly SCRIPT_VERSION="1.3"
+readonly SCRIPT_VERSION="1.4"
 readonly ASSET_URL="https://raw.githubusercontent.com/plawlost/plawos-assets/main/assets/"
 readonly LOG_FILE="/var/log/plawos_setup.log"
 
@@ -65,7 +65,7 @@ apply_branding() {
     # Update desktop files
     find /usr/share/applications -type f -name "*.desktop" -exec sed -i 's/Kubuntu/PlawOS/g' {} +
 
-    # Update look-and-feel files (using find to avoid language-specific paths)
+    # Update look-and-feel files
     find /usr/share/plasma/look-and-feel -type f -name "*.desktop" -exec sed -i 's/Kubuntu/PlawOS/g' {} +
 
     log_message "PlawOS branding applied successfully"
