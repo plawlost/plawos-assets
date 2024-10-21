@@ -39,31 +39,6 @@ update_system() {
     apt update && apt upgrade -y || handle_error "Failed to update and upgrade the system"
 }
 
-# Function to select language
-select_language() {
-    log_message "Prompting user to select language..."
-    local lang_choice
-    lang_choice=$(yad --title="Choose Your Language" \
-        --text="Please select your language:" \
-        --button="English:0" \
-        --button="Türkçe:1" \
-        --center --width=400) || handle_error "Language selection failed"
-
-    if [ "$lang_choice" -eq 0 ]; then
-        update-locale LANG=en_US.UTF-8
-        localectl set-locale LANG=en_US.UTF-8
-        export LANG=en_US.UTF-8
-        log_message "Language set to English"
-    elif [ "$lang_choice" -eq 1 ]; then
-        update-locale LANG=tr_TR.UTF-8
-        localectl set-locale LANG=tr_TR.UTF-8
-        export LANG=tr_TR.UTF-8
-        log_message "Dil Türkçe olarak ayarlandı"
-    fi
-
-    dpkg-reconfigure locales
-}
-
 # Function to install essential packages
 install_packages() {
     log_message "Installing essential packages..."
@@ -195,7 +170,6 @@ main() {
 
     check_root
     update_system
-    select_language
     install_packages
     optimize_performance
     apply_branding
