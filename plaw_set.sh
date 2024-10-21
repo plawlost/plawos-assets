@@ -37,6 +37,9 @@ check_root() {
 apply_branding() {
     log_message "Downloading and applying PlawOS branding..."
 
+    # Create PlawOS sound directory
+    mkdir -p /usr/share/sounds/PlawOS || handle_error "Failed to create PlawOS sound directory"
+
     # Download assets
     wget "${ASSET_URL}plawos-logo.png" -O /tmp/plawos-logo.png || handle_error "Failed to download PlawOS logo"
     wget "${ASSET_URL}ant-dark-theme.xz" -O /tmp/ant-dark-theme.xz || handle_error "Failed to download PlawOS theme"
