@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PlawOS Setup Script (plaw_set.sh)
-# Version: 1.1
+# Version: 1.2
 # Description: Transforms Kubuntu into PlawOS with custom branding
 
 # Set strict mode
@@ -9,7 +9,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Define constants
-readonly SCRIPT_VERSION="1.1"
+readonly SCRIPT_VERSION="1.2"
 readonly ASSET_URL="https://raw.githubusercontent.com/plawlost/plawos-assets/main/assets/"
 readonly LOG_FILE="/var/log/plawos_setup.log"
 
@@ -33,6 +33,19 @@ check_root() {
     fi
 }
 
+# Function to safely replace text in files
+safe_replace() {
+    local file=$1
+    local search=$2
+    local replace=$3
+    if [ -f "$file" ]; then
+        sed -i "s/$search/$replace/g" "$file"
+        log_message "Updated $file"
+    else
+        log_message "Warning: $file not found, skipping"
+    fi
+}
+
 # Function to download and apply PlawOS branding
 apply_branding() {
     log_message "Downloading and applying PlawOS branding..."
@@ -45,7 +58,15 @@ apply_branding() {
     update-initramfs -u
 
     # Replace Kubuntu branding with PlawOS
-    sed -i 's/Kubuntu/PlawOS/g' /etc/os-release /usr/share/plasma/look-and-feel/org.kubuntu.*/*.desktop /etc/issue /etc/lsb-release /usr/share/applications/*.desktop /usr/share/discover/discover.ui
+    safe_replace "/etc/os-release" "Kubuntu" "PlawOS"
+    safe_replace "/etc/issue" "Kubuntu" "PlawOS"
+    safe_replace "/etc/lsb-release" "Kubuntu" "PlawOS"
+
+    # Update desktop files
+    find /usr/share/applications -type f -name "*.desktop" -exec sed -i 's/Kubuntu/PlawOS/g' {} +
+
+    # Update look-and-feel files
+    find /usr/share/plasma/look-and-feel -type f -name "*.desktop" -exec sed -i 's/Kubuntu/PlawOS/g' {} +
 
     log_message "PlawOS branding applied successfully"
 }
@@ -53,7 +74,7 @@ apply_branding() {
 # Function to customize GRUB
 customize_grub() {
     log_message "Customizing GRUB..."
-    sed -i 's/GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="PlawOS"/' /etc/default/grub
+    safe_replace "/etc/default/grub" 'GRUB_DISTRIBUTOR=.*' 'GRUB_DISTRIBUTOR="PlawOS"'
     update-grub
 }
 
