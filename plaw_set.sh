@@ -45,8 +45,12 @@ apply_branding() {
     wget "${ASSET_URL}ant-dark-theme.xz" -O /tmp/ant-dark-theme.xz || handle_error "Failed to download PlawOS theme"
     wget "${ASSET_URL}plawos-sound.wav" -O /usr/share/sounds/PlawOS/plawos-sound.wav || handle_error "Failed to download PlawOS sound"
 
+    # Debug: Check the content of the downloaded theme file
+    file /tmp/ant-dark-theme.xz
+    head -n 5 /tmp/ant-dark-theme.xz
+
     # Install custom theme
-    unxz /tmp/ant-dark-theme.xz -c | tar -xf - -C /usr/share/plasma/desktoptheme/
+    unxz /tmp/ant-dark-theme.xz -c | tar -xf - -C /usr/share/plasma/desktoptheme/ || handle_error "Failed to extract theme"
     lookandfeeltool -a AntDark
 
     # Replace boot logo
