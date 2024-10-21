@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PlawOS Setup Script (plaw_set.sh)
-# Version: 1.0
+# Version: 1.1
 # Description: Transforms Kubuntu into PlawOS with custom branding
 
 # Set strict mode
@@ -9,8 +9,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Define constants
-readonly SCRIPT_VERSION="1.0"
-readonly ASSET_URL="https://github.com/plawlost/plawos-assets/blob/main/assets/"
+readonly SCRIPT_VERSION="1.1"
+readonly ASSET_URL="https://raw.githubusercontent.com/plawlost/plawos-assets/main/assets/"
 readonly LOG_FILE="/var/log/plawos_setup.log"
 
 # Function to log messages
@@ -37,21 +37,8 @@ check_root() {
 apply_branding() {
     log_message "Downloading and applying PlawOS branding..."
 
-    # Create PlawOS sound directory
-    mkdir -p /usr/share/sounds/PlawOS || handle_error "Failed to create PlawOS sound directory"
-
-    # Download assets
+    # Download logo
     wget "${ASSET_URL}plawos-logo.png" -O /tmp/plawos-logo.png || handle_error "Failed to download PlawOS logo"
-    wget "${ASSET_URL}ant-dark-theme.xz" -O /tmp/ant-dark-theme.xz || handle_error "Failed to download PlawOS theme"
-    wget "${ASSET_URL}plawos-sound.wav" -O /usr/share/sounds/PlawOS/plawos-sound.wav || handle_error "Failed to download PlawOS sound"
-
-    # Debug: Check the content of the downloaded theme file
-    file /tmp/ant-dark-theme.xz
-    head -n 5 /tmp/ant-dark-theme.xz
-
-    # Install custom theme
-    unxz /tmp/ant-dark-theme.xz -c | tar -xf - -C /usr/share/plasma/desktoptheme/ || handle_error "Failed to extract theme"
-    lookandfeeltool -a AntDark
 
     # Replace boot logo
     cp /tmp/plawos-logo.png /usr/share/plymouth/themes/kubuntu-logo/kubuntu-logo.png
@@ -73,7 +60,7 @@ customize_grub() {
 # Function to clean up
 cleanup() {
     log_message "Cleaning up temporary files..."
-    rm -f /tmp/plawos-logo.png /tmp/ant-dark-theme.xz
+    rm -f /tmp/plawos-logo.png
 }
 
 # Main function
@@ -91,4 +78,3 @@ main() {
 
 # Run the main function
 main "$@"
-https://github.com/plawlost/plawos-assets/blob/main/assets/
