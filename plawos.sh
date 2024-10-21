@@ -10,7 +10,7 @@ IFS=$'\n\t'
 
 # Define constants
 readonly SCRIPT_VERSION="1.0"
-readonly ASSET_URL="https://raw.githubusercontent.com/plawlost/plawos-assets/main/"
+readonly ASSET_URL="https://github.com/plawlost/plawos-assets/blob/main/assets/"
 readonly LOG_FILE="/var/log/plawos_setup.log"
 
 # Function to log messages
